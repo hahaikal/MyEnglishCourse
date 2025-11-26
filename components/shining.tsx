@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card } from '@/components/ui/card';
 import { getSupabase, type Wish } from '@/lib/supabase';
+import { useToast } from '@/hooks/use-toast';
 
 export function ShiningWishesSection() {
   const [wishes, setWishes] = useState<Wish[]>([]);
@@ -15,6 +16,7 @@ export function ShiningWishesSection() {
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stars, setStars] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
+  const { toast } = useToast();
 
   useEffect(() => {
     const generatedStars = Array.from({ length: 30 }, (_, i) => ({
@@ -26,16 +28,23 @@ export function ShiningWishesSection() {
     setStars(generatedStars);
   }, []);
 
+  // Fetch wishes on load
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase) return;
 
     fetchWishes();
 
+    // Real-time subscription untuk update otomatis dari user LAIN
     const subscription = supabase
       .channel('wishes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wishes' }, (payload) => {
-        setWishes((current) => [payload.new as Wish, ...current]);
+        // Cek apakah wish ini sudah ada di state (untuk menghindari duplikasi dari optimistic update kita sendiri)
+        setWishes((current) => {
+          const exists = current.some(w => w.id === payload.new.id);
+          if (exists) return current;
+          return [payload.new as Wish, ...current];
+        });
       })
       .subscribe();
 
@@ -55,6 +64,8 @@ export function ShiningWishesSection() {
 
     if (!error && data) {
       setWishes(data);
+    } else if (error) {
+      console.error('Error fetching wishes:', error);
     }
   };
 
@@ -65,17 +76,49 @@ export function ShiningWishesSection() {
     if (message.length > 280) return;
 
     const supabase = getSupabase();
-    if (!supabase) return;
+    
+    if (!supabase) {
+      toast({
+        title: "Supabase Not Configured",
+        description: "Please set up your environment variables.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsSubmitting(true);
 
-    const { error } = await supabase
-      .from('wishes')
-      .insert([{ name: name.trim(), message: message.trim() }]);
+    // Simpan data ke variabel lokal dulu
+    const newWishData = {
+      name: name.trim(),
+      message: message.trim()
+    };
 
-    if (!error) {
+    // Insert ke Supabase dan minta data balikan (select)
+    const { data, error } = await supabase
+      .from('wishes')
+      .insert([newWishData])
+      .select(); // Penting: .select() agar kita dapat ID dan created_at yang digenerate server
+
+    if (!error && data) {
+      // OPTIMISTIC UPDATE / IMMEDIATE UPDATE
+      // Langsung tambahkan data yang dikembalikan server ke state lokal
+      const insertedWish = data[0] as Wish;
+      setWishes((prevWishes) => [insertedWish, ...prevWishes]);
+
       setName('');
       setMessage('');
+      toast({
+        title: "Wish Sent!",
+        description: "Thank you for your shining support!",
+      });
+    } else {
+      console.error('Error sending wish:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send wish. Please try again.",
+        variant: "destructive",
+      });
     }
 
     setIsSubmitting(false);

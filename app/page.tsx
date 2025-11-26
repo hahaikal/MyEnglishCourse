@@ -1,14 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { HeroSection } from '@/components/hero-section';
-import { AboutSection } from '@/components/about-section';
-import { GallerySection } from '@/components/gallery-section';
-import { BenefitsSection } from '@/components/benefits-section';
-import { ShiningWishesSection as RsvpSection } from '@/components/shining';
-import { Footer } from '@/components/footer';
+import { useEffect, useRef, useState, Suspense } from 'react';
+import { HeroSection } from '../components/hero-section'; // Fixed path
+import { AboutSection } from '../components/about-section'; // Fixed path
+import { GallerySection } from '../components/gallery-section'; // Fixed path
+import { BenefitsSection } from '../components/benefits-section'; // Fixed path
+import { ShiningWishesSection as RsvpSection } from '../components/shining'; // Fixed path
+import { Footer } from '../components/footer'; // Fixed path
+import { WelcomeOverlay } from '../components/welcome-overlay'; // Fixed path
 
-export default function Home() {
+function HomeContent() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
@@ -18,19 +19,6 @@ export default function Home() {
     audio.volume = 0.6;
     audioRef.current = audio;
 
-    const autoPlay = async () => {
-      try {
-        await audio.play();
-        setIsPlaying(true);
-      } catch (error) {
-        console.log('Autoplay blocked, showing play button');
-      }
-    };
-
-    audio.addEventListener('canplaythrough', autoPlay);
-
-    autoPlay();
-
     return () => {
       if (audioRef.current) {
         audioRef.current.pause();
@@ -39,7 +27,8 @@ export default function Home() {
     };
   }, []);
 
-  const handlePlayAudio = async () => {
+  // Fungsi ini akan dipanggil saat tombol di WelcomeOverlay diklik
+  const handleOpenInvitation = async () => {
     if (audioRef.current) {
       try {
         await audioRef.current.play();
@@ -50,31 +39,10 @@ export default function Home() {
     }
   };
 
-  useEffect(() => {
-    const handleFirstInteraction = () => {
-      if (!isPlaying) {
-        handlePlayAudio();
-      }
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
-    };
-
-    if (!isPlaying) {
-      document.addEventListener('click', handleFirstInteraction);
-      document.addEventListener('keydown', handleFirstInteraction);
-      document.addEventListener('touchstart', handleFirstInteraction);
-    }
-
-    return () => {
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
-      document.removeEventListener('touchstart', handleFirstInteraction);
-    };
-  }, [isPlaying]);
-
   return (
     <main className="overflow-hidden">
+      <WelcomeOverlay onOpen={handleOpenInvitation} />
+      
       <HeroSection />
       <AboutSection />
       <GallerySection />
@@ -82,5 +50,13 @@ export default function Home() {
       <RsvpSection />
       <Footer />
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-navy-dark" />}>
+      <HomeContent />
+    </Suspense>
   );
 }
