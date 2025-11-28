@@ -42,7 +42,7 @@ function ImageSlider({ images, title }: { images: string[]; title: string }) {
     if (!emblaApi) return;
 
     const onSelect = () => {
-      setCurrentIndex(emblaApi.selectedIndex);
+      setCurrentIndex(emblaApi.selectedScrollSnap());
     };
 
     emblaApi.on('select', onSelect);
