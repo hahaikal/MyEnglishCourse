@@ -10,7 +10,6 @@ interface WelcomeOverlayProps {
 }
 
 function WelcomeOverlayContent({ onOpen }: WelcomeOverlayProps) {
-  // REVISI CRITICAL BUG: Default state harus TRUE agar tidak flicker/bocor saat load
   const [isOpen, setIsOpen] = useState(true); 
   const [guestName, setGuestName] = useState('Bapak/Ibu/Saudara');
   
@@ -21,7 +20,6 @@ function WelcomeOverlayContent({ onOpen }: WelcomeOverlayProps) {
       if (to) {
         setGuestName(decodeURIComponent(to));
       }
-      // Kita TIDAK perlu setIsOpen(true) di sini lagi karena default sudah true
     }
   }, []);
 
@@ -34,12 +32,10 @@ function WelcomeOverlayContent({ onOpen }: WelcomeOverlayProps) {
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          initial={{ opacity: 1 }} // Pastikan opacity awal 1 (bukan 0)
+          initial={{ opacity: 1 }}
           exit={{ opacity: 0, y: -100, transition: { duration: 1, ease: [0.22, 1, 0.36, 1] } }}
-          // REVISI: z-index sangat tinggi (z-[9999]) dan background solid untuk menutup total
           className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-navy-dark text-white p-4 overflow-hidden"
         >
-          {/* Background Effect */}
           <div className="absolute inset-0 overflow-hidden opacity-20 pointer-events-none">
              <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-orange-primary blur-[120px]" />
              <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-navy-primary blur-[120px]" />

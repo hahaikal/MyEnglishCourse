@@ -1,13 +1,20 @@
 'use client';
 
 import { useEffect, useRef, useState, Suspense } from 'react';
+import dynamic from 'next/dynamic';
+import Image from 'next/image';
 import { HeroSection } from '@/components/hero-section';
-import { AboutSection } from '@/components/about-section';
-import { GallerySection } from '@/components/gallery-section';
-import { BenefitsSection } from '@/components/benefits-section';
-import { ShiningWishesSection as RsvpSection } from '@/components/shining';
-import { Footer } from '@/components/footer';
 import { WelcomeOverlay } from '@/components/welcome-overlay';
+
+const AboutSection = dynamic(() => import('@/components/about-section').then(mod => mod.AboutSection), {
+  loading: () => <div className="h-96" />,
+});
+const GallerySection = dynamic(() => import('@/components/gallery-section').then(mod => mod.GallerySection), {
+  loading: () => <div className="h-96" />,
+});
+const BenefitsSection = dynamic(() => import('@/components/benefits-section').then(mod => mod.BenefitsSection));
+const ShiningWishesSection = dynamic(() => import('@/components/shining').then(mod => mod.ShiningWishesSection));
+const Footer = dynamic(() => import('@/components/footer').then(mod => mod.Footer));
 
 function HomeContent() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -42,28 +49,26 @@ function HomeContent() {
     <main className="min-h-screen relative overflow-hidden">
       <WelcomeOverlay onOpen={handleOpenInvitation} />
       
-      {/* STABLE MOBILE BACKGROUND FIX 
-        1. position: fixed -> Agar tidak ikut scroll
-        2. h-[100vh] & supports-dvh -> Agar tinggi konsisten meski address bar browser muncul/hilang
-        3. bg-cover & bg-center -> Agar gambar proporsional
-        4. z-[-1] -> Agar selalu di belakang konten
-        5. transform-gpu -> Memaksa hardware acceleration untuk performa lebih mulus
-      */}
-      <div 
-        className="fixed top-0 left-0 w-full h-[100vh] supports-[height:100dvh]:h-[100dvh] z-[-1] bg-cover bg-center bg-no-repeat transform-gpu pointer-events-none"
-        style={{ backgroundImage: "url('/BG2.jpeg')" }}
-      >
-        {/* Overlay tipis agar teks lebih terbaca di atas gambar yang mungkin terang/ramai */}
-        <div className="absolute inset-0 bg-black/20"></div>
+      <div className="fixed inset-0 w-full h-full z-[-1]">
+        <Image
+          src="/BG2.jpeg"
+          alt="Background Starry Night"
+          fill
+          priority
+          quality={75}
+          className="object-cover object-center opacity-90"
+          sizes="100vw"
+        />
+        <div className="absolute inset-0 bg-black/30" />
       </div>
       
-      {/* CONTENT WRAPPER */}
       <div className="relative z-10 w-full">
         <HeroSection />
+        
         <AboutSection />
         <GallerySection />
         <BenefitsSection />
-        <RsvpSection />
+        <ShiningWishesSection />
         <Footer />
       </div>
     </main>
@@ -72,7 +77,7 @@ function HomeContent() {
 
 export default function Home() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-navy-dark" />}>
+    <Suspense fallback={<div className="min-h-screen bg-navy-dark flex items-center justify-center text-white">Loading...</div>}>
       <HomeContent />
     </Suspense>
   );

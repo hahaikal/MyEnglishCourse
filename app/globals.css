@@ -56,9 +56,19 @@
   }
   body {
     @apply text-foreground;
-    /* REVISI: Background Image dipindah ke page.tsx agar lebih stabil di mobile */
-    /* Kita gunakan warna dasar saja di sini */
     background-color: #0F172A; 
     min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+    50% { opacity: 1; transform: scale(1.2); }
+  }
+  
+  .animate-twinkle {
+    animation: twinkle 3s infinite ease-in-out;
+    will-change: opacity, transform;
   }
 }

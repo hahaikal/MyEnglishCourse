@@ -6,7 +6,6 @@ import { Button } from '@/components/ui/button';
 
 export function AboutSection() {
   return (
-    // Background section dibuat transparan karena sudah di-handle oleh wrapper di page.tsx
     <section className="py-20 px-4 relative">
       
       <div className="max-w-7xl mx-auto relative z-10">
@@ -50,7 +49,6 @@ export function AboutSection() {
                 ))}
               </div>
 
-              {/* The Compass (Location Map) */}
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}

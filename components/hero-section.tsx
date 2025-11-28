@@ -12,7 +12,6 @@ export function HeroSection() {
     y: number;
     size: number;
     delay: number;
-    opacity: number;
   }>>([]);
 
   const [timeLeft, setTimeLeft] = useState({
@@ -23,13 +22,15 @@ export function HeroSection() {
   });
 
   useEffect(() => {
-    const generatedStars = Array.from({ length: 100 }, (_, i) => ({
+    const isMobile = window.innerWidth < 768;
+    const starCount = isMobile ? 20 : 60;
+
+    const generatedStars = Array.from({ length: starCount }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
-      size: Math.random() * 3 + 1,
-      delay: Math.random() * 3,
-      opacity: Math.random() * 0.7 + 0.3,
+      size: Math.random() * 2 + 1,
+      delay: Math.random() * 5, 
     }));
     setStars(generatedStars);
 
@@ -62,26 +63,16 @@ export function HeroSection() {
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10">
       
       <div className="absolute inset-0 z-0 pointer-events-none">
-        {stars.length > 0 && stars.map((star) => (
-          <motion.div
+        {stars.map((star) => (
+          <div
             key={star.id}
-            className="absolute rounded-full bg-gold-accent"
+            className="absolute rounded-full bg-gold-accent animate-twinkle"
             style={{
               left: `${star.x}%`,
               top: `${star.y}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
-              opacity: star.opacity,
-            }}
-            animate={{
-              opacity: [star.opacity, 1, star.opacity],
-              scale: [0.8, 1.2, 0.8],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Infinity,
-              delay: star.delay,
-              ease: 'easeInOut',
+              animationDelay: `${star.delay}s`,
             }}
           />
         ))}

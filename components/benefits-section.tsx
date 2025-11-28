@@ -42,7 +42,7 @@ export function BenefitsSection() {
             Why This <span className="text-orange-primary">Matters</span>
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Our End of Year Concert is more than just a performance—it's a
+            Our End-of-Year Concert is more than just a performance—it's a
             transformative learning experience
           </p>
         </motion.div>

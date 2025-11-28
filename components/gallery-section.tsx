@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent } from '@/components/ui/card';
 import { Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import useEmblaCarousel from 'embla-carousel-react';
+import Image from 'next/image';
 
 const showcaseItems = [
   {
@@ -69,12 +70,16 @@ function ImageSlider({ images, title }: { images: string[]; title: string }) {
         <div className="flex h-full">
           {images.map((imgSrc, index) => (
             <div key={index} className="relative flex-[0_0_100%] h-full overflow-hidden">
-              <img
+              {/* OPTIMIZATION STEP 2: Ganti <img> dengan <Image /> */}
+              <Image
                 src={imgSrc}
                 alt={`${title} ${index + 1}`}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                fill
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                priority={index === 0} // Prioritaskan gambar pertama
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10" />
             </div>
           ))}
         </div>
@@ -84,7 +89,7 @@ function ImageSlider({ images, title }: { images: string[]; title: string }) {
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-10"
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-20"
             aria-label="Previous image"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -92,13 +97,13 @@ function ImageSlider({ images, title }: { images: string[]; title: string }) {
 
           <button
             onClick={goToNext}
-            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-10"
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-white text-gray-800 p-2 rounded-full shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity duration-300 z-20"
             aria-label="Next image"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
 
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-20">
             {images.map((_, index) => (
               <button
                 key={index}
