@@ -16,7 +16,7 @@ export function Footer() {
         >
           <div className="flex items-center justify-center gap-2 mb-4">
             <Star className="w-6 h-6 text-gold-accent" />
-            <h3 className="text-2xl font-bold">MyEnglishCourse</h3>
+            <h3 className="text-2xl font-bold">My English Course</h3>
             <Star className="w-6 h-6 text-gold-accent" />
           </div>
 

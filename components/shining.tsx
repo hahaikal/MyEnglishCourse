@@ -15,31 +15,29 @@ export function ShiningWishesSection() {
   const [name, setName] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [stars, setStars] = useState<Array<{id: number, x: number, y: number, delay: number}>>([]);
+  const [stars, setStars] = useState<Array<{id: number, x: number, y: number, delay: number, opacity: number}>>([]);
   const { toast } = useToast();
 
   useEffect(() => {
-    const generatedStars = Array.from({ length: 30 }, (_, i) => ({
+    const generatedStars = Array.from({ length: 70 }, (_, i) => ({
       id: i,
       x: Math.random() * 100,
       y: Math.random() * 100,
       delay: Math.random() * 3,
+      opacity: Math.random() * 0.7 + 0.3,
     }));
     setStars(generatedStars);
   }, []);
 
-  // Fetch wishes on load
   useEffect(() => {
     const supabase = getSupabase();
     if (!supabase) return;
 
     fetchWishes();
 
-    // Real-time subscription untuk update otomatis dari user LAIN
     const subscription = supabase
       .channel('wishes')
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wishes' }, (payload) => {
-        // Cek apakah wish ini sudah ada di state (untuk menghindari duplikasi dari optimistic update kita sendiri)
         setWishes((current) => {
           const exists = current.some(w => w.id === payload.new.id);
           if (exists) return current;
@@ -88,21 +86,17 @@ export function ShiningWishesSection() {
 
     setIsSubmitting(true);
 
-    // Simpan data ke variabel lokal dulu
     const newWishData = {
       name: name.trim(),
       message: message.trim()
     };
 
-    // Insert ke Supabase dan minta data balikan (select)
     const { data, error } = await supabase
       .from('wishes')
       .insert([newWishData])
-      .select(); // Penting: .select() agar kita dapat ID dan created_at yang digenerate server
+      .select(); 
 
     if (!error && data) {
-      // OPTIMISTIC UPDATE / IMMEDIATE UPDATE
-      // Langsung tambahkan data yang dikembalikan server ke state lokal
       const insertedWish = data[0] as Wish;
       setWishes((prevWishes) => [insertedWish, ...prevWishes]);
 
@@ -128,8 +122,12 @@ export function ShiningWishesSection() {
   const isOverLimit = charCount > 280;
 
   return (
-    <section id="wishes" className="py-20 px-4 bg-gradient-to-b from-navy-dark to-navy-primary relative overflow-hidden">
-      <div className="absolute inset-0 opacity-10">
+    <section id="wishes" className="py-20 px-4 relative overflow-hidden">
+      {/* Overlay Gelap untuk Shines Section agar kontras dengan bintang */}
+      <div className="absolute inset-0 bg-navy-dark/90 backdrop-blur-sm z-0"></div>
+
+      {/* REVISI: Bintang-bintang animasi ala Hero Section */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.length > 0 && stars.map((star) => (
           <motion.div
             key={star.id}
@@ -139,9 +137,10 @@ export function ShiningWishesSection() {
               top: `${star.y}%`,
               width: '2px',
               height: '2px',
+              opacity: star.opacity,
             }}
             animate={{
-              opacity: [0.2, 1, 0.2],
+              opacity: [star.opacity, 1, star.opacity],
               scale: [0.8, 1.5, 0.8],
             }}
             transition={{
@@ -169,10 +168,10 @@ export function ShiningWishesSection() {
           >
             <Sparkles className="w-16 h-16 text-gold-accent mx-auto" />
           </motion.div>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 drop-shadow-lg">
             Shining <span className="text-orange-primary">Wishes</span>
           </h2>
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-200 font-medium max-w-2xl mx-auto drop-shadow-md">
             Share your words of encouragement and support for our talented students
           </p>
         </motion.div>
@@ -187,7 +186,7 @@ export function ShiningWishesSection() {
             <Card className="p-8 bg-white/95 backdrop-blur shadow-2xl border-0">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-navy-primary mb-2">
+                  <label htmlFor="name" className="block text-sm font-bold text-navy-primary mb-2">
                     Your Name
                   </label>
                   <Input
@@ -198,12 +197,12 @@ export function ShiningWishesSection() {
                     placeholder="Enter your name"
                     maxLength={100}
                     required
-                    className="border-2 border-gray-300 focus:border-orange-primary transition-colors"
+                    className="border-2 border-gray-300 focus:border-orange-primary transition-colors text-black font-medium"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-navy-primary mb-2">
+                  <label htmlFor="message" className="block text-sm font-bold text-navy-primary mb-2">
                     Your Message
                   </label>
                   <Textarea
@@ -214,12 +213,12 @@ export function ShiningWishesSection() {
                     maxLength={280}
                     required
                     rows={5}
-                    className={`border-2 transition-colors resize-none ${
+                    className={`border-2 transition-colors resize-none text-black font-medium ${
                       isOverLimit ? 'border-red-500' : 'border-gray-300 focus:border-orange-primary'
                     }`}
                   />
                   <div className="flex justify-between items-center mt-2">
-                    <p className={`text-sm ${isOverLimit ? 'text-red-500' : 'text-gray-500'}`}>
+                    <p className={`text-sm ${isOverLimit ? 'text-red-500' : 'text-gray-600 font-semibold'}`}>
                       {charCount}/280 characters
                     </p>
                   </div>
@@ -228,7 +227,7 @@ export function ShiningWishesSection() {
                 <Button
                   type="submit"
                   disabled={isSubmitting || !name.trim() || !message.trim() || isOverLimit}
-                  className="w-full bg-orange-primary hover:bg-orange-light text-white py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-orange-primary hover:bg-orange-light text-white py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                 >
                   {isSubmitting ? (
                     <span className="flex items-center justify-center">
@@ -261,7 +260,7 @@ export function ShiningWishesSection() {
           >
             {wishes.length === 0 ? (
               <Card className="p-8 bg-white/10 backdrop-blur border border-gold-accent/30">
-                <p className="text-center text-gray-300 text-lg">
+                <p className="text-center text-gray-200 text-lg font-medium">
                   Be the first to share a shining wish!
                 </p>
               </Card>
@@ -273,7 +272,7 @@ export function ShiningWishesSection() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   transition={{ duration: 0.4, delay: index * 0.05 }}
                 >
-                  <Card className="p-6 bg-gradient-to-br from-white to-orange-bg/30 backdrop-blur border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <Card className="p-2 bg-gradient-to-br from-white to-orange-bg/30 backdrop-blur border-0 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
                     <div className="flex items-start gap-3">
                       <div className="flex-shrink-0">
                         <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-primary to-gold-accent flex items-center justify-center">
@@ -284,10 +283,10 @@ export function ShiningWishesSection() {
                         <h4 className="font-bold text-navy-primary mb-1">
                           {wish.name}
                         </h4>
-                        <p className="text-gray-700 leading-relaxed mb-2">
+                        <p className="text-gray-900 leading-relaxed mb-2 font-medium">
                           {wish.message}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-600 font-semibold">
                           {new Date(wish.created_at).toLocaleDateString('en-US', {
                             month: 'short',
                             day: 'numeric',

@@ -92,7 +92,7 @@ export function BenefitsSection() {
             ."
           </blockquote>
           <p className="mt-6 text-gray-600 text-lg">
-            — MyEnglishCourse Team
+            — My English Course Team
           </p>
         </motion.div>
       </div>
