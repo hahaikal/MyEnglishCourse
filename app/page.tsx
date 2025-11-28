@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, Suspense } from 'react';
+// Menggunakan alias @/ sesuai file Anda, jika error nanti akan saya ubah ke relative
 import { HeroSection } from '@/components/hero-section';
 import { AboutSection } from '@/components/about-section';
 import { GallerySection } from '@/components/gallery-section';
@@ -39,37 +40,27 @@ function HomeContent() {
   };
 
   return (
-    <main className="overflow-hidden">
+    <main className="min-h-screen relative overflow-hidden">
       <WelcomeOverlay onOpen={handleOpenInvitation} />
       
-      <div className="relative">
-        <div 
-          className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat bg-fixed"
-          style={{ backgroundImage: "url('/BG2.jpeg')" }}
-        >
-          <div className="absolute inset-0 bg-navy-dark/30"></div>
-        </div>
-        
-        <div className="relative z-10">
-          <HeroSection />
-          <AboutSection />
-        </div>
+      {/* GLOBAL FIXED BACKGROUND */}
+      {/* Ini menggantikan semua background zona sebelumnya */}
+      <div 
+        className="fixed inset-0 z-[-1] bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/BG2.jpeg')" }}
+      >
+        {/* Overlay tipis opsional agar teks lebih terbaca di atas gambar */}
+        <div className="absolute inset-0 bg-black/10"></div>
       </div>
-
-      <div className="relative">
-        <div
-          className="absolute inset-0 z-0 bg-cover bg-top bg-no-repeat bg-fixed"
-          style={{ backgroundImage: "url('/BG2.jpeg')" }}
-        >
-           <div className="absolute inset-0 bg-gradient-to-b bg-navy-dark/30"></div>
-        </div>
-
-        <div className="relative z-10">
-          <GallerySection />
-          <BenefitsSection />
-          <RsvpSection />
-          <Footer />
-        </div>
+      
+      {/* CONTENT WRAPPER */}
+      <div className="relative z-10">
+        <HeroSection />
+        <AboutSection />
+        <GallerySection />
+        <BenefitsSection />
+        <RsvpSection />
+        <Footer />
       </div>
     </main>
   );

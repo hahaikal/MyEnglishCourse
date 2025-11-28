@@ -162,7 +162,7 @@ export function HeroSection() {
           transition={{ duration: 1, delay: 0.6 }}
           className="text-base md:text-xl text-white max-w-2xl mx-auto mt-4 mb-8 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-medium"
         >
-          We are delighted to invite you to our End of Year Concert! Join us as
+          We are delighted to invite you to our End-of-Year Concert 2025! Join us as
           we celebrate our students&apos; growth, creativity, and achievements.
         </motion.p>
 

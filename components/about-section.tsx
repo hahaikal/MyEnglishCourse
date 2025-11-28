@@ -23,7 +23,7 @@ export function AboutSection() {
               </h2>
               
               <p className="text-lg text-gray-100 leading-relaxed mb-8 font-medium text-center md:text-left drop-shadow-md">
-                The End of Year Concert by MEC is an annual celebration that
+                The End-of-Year Concert 2025 by MEC is an annual celebration that
                 showcases the students&apos; learning progress throughout the year. It
                 includes performances such as drama, poetry, storytelling,
                 singing, and other creative English presentations.
