@@ -31,7 +31,7 @@ export function AboutSection() {
               <div className="space-y-4 mb-8">
                 {[
                   { icon: Calendar, title: "Date", desc: "Sunday, 7 December 2025" },
-                  { icon: Clock, title: "Time", desc: "Session 1: 13.30 - 15.00 WIB \n(PreSchool, PreKindergarten, Kindergarten & Basic)\nSession 2: 15.30 - 18.00 WIB\n(Starter - Waystage)" },
+                  { icon: Clock, title: "Time", desc: "Session 1: 13.30 - 15.00 WIB \n(Preschool, Prekindergarten, Kindergarten & Basic)\nSession 2: 15.30 - 18.00 WIB\n(Starter - Waystage)" },
                   { icon: MapPin, title: "Venue", desc: "Ballroom Bintang Mulia" },
                   { icon: Users, title: "Audience", desc: "Students, Parents & Guests" }
                 ].map((item, idx) => (

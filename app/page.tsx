@@ -7,7 +7,7 @@ import { HeroSection } from '@/components/hero-section';
 import { WelcomeOverlay } from '@/components/welcome-overlay';
 
 const AboutSection = dynamic(() => import('@/components/about-section').then(mod => mod.AboutSection), {
-  loading: () => <div className="h-96" />,
+  loading: () => <div className="h-96" />, 
 });
 const GallerySection = dynamic(() => import('@/components/gallery-section').then(mod => mod.GallerySection), {
   loading: () => <div className="h-96" />,
@@ -49,7 +49,7 @@ function HomeContent() {
     <main className="min-h-screen relative overflow-hidden">
       <WelcomeOverlay onOpen={handleOpenInvitation} />
       
-      <div className="fixed inset-0 w-full h-full z-[-1]">
+      <div className="fixed top-0 left-0 w-full h-[100vh] z-[-1] pointer-events-none">
         <Image
           src="/BG2.jpeg"
           alt="Background Starry Night"
@@ -64,7 +64,6 @@ function HomeContent() {
       
       <div className="relative z-10 w-full">
         <HeroSection />
-        
         <AboutSection />
         <GallerySection />
         <BenefitsSection />
