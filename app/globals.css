@@ -56,13 +56,9 @@
   }
   body {
     @apply text-foreground;
-    /* REVISI: Single Background BG2.jpg untuk seluruh halaman */
-    background-image: url('/BG2.jpg');
-    background-size: cover;
-    background-position: center top;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Parallax effect */
-    background-color: #0F172A; /* Fallback color */
+    /* REVISI: Background Image dipindah ke page.tsx agar lebih stabil di mobile */
+    /* Kita gunakan warna dasar saja di sini */
+    background-color: #0F172A; 
     min-height: 100vh;
   }
 }

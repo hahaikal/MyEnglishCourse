@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useRef, useState, Suspense } from 'react';
-// Menggunakan alias @/ sesuai file Anda, jika error nanti akan saya ubah ke relative
 import { HeroSection } from '@/components/hero-section';
 import { AboutSection } from '@/components/about-section';
 import { GallerySection } from '@/components/gallery-section';
@@ -43,18 +42,23 @@ function HomeContent() {
     <main className="min-h-screen relative overflow-hidden">
       <WelcomeOverlay onOpen={handleOpenInvitation} />
       
-      {/* GLOBAL FIXED BACKGROUND */}
-      {/* Ini menggantikan semua background zona sebelumnya */}
+      {/* STABLE MOBILE BACKGROUND FIX 
+        1. position: fixed -> Agar tidak ikut scroll
+        2. h-[100vh] & supports-dvh -> Agar tinggi konsisten meski address bar browser muncul/hilang
+        3. bg-cover & bg-center -> Agar gambar proporsional
+        4. z-[-1] -> Agar selalu di belakang konten
+        5. transform-gpu -> Memaksa hardware acceleration untuk performa lebih mulus
+      */}
       <div 
-        className="fixed inset-0 z-[-1] bg-cover bg-center bg-no-repeat"
+        className="fixed top-0 left-0 w-full h-[100vh] supports-[height:100dvh]:h-[100dvh] z-[-1] bg-cover bg-center bg-no-repeat transform-gpu pointer-events-none"
         style={{ backgroundImage: "url('/BG2.jpeg')" }}
       >
-        {/* Overlay tipis opsional agar teks lebih terbaca di atas gambar */}
-        <div className="absolute inset-0 bg-black/10"></div>
+        {/* Overlay tipis agar teks lebih terbaca di atas gambar yang mungkin terang/ramai */}
+        <div className="absolute inset-0 bg-black/20"></div>
       </div>
       
       {/* CONTENT WRAPPER */}
-      <div className="relative z-10">
+      <div className="relative z-10 w-full">
         <HeroSection />
         <AboutSection />
         <GallerySection />
