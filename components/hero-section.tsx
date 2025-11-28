@@ -22,6 +22,7 @@ export function HeroSection() {
   });
 
   useEffect(() => {
+    // Logic optimasi bintang yang sudah kita terapkan
     const isMobile = window.innerWidth < 768;
     const starCount = isMobile ? 20 : 60;
 
@@ -60,7 +61,10 @@ export function HeroSection() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 pb-10">
+    // REVISI POSISI: 
+    // Ganti 'pt-20 pb-10' menjadi 'py-12 md:py-20'.
+    // Menggunakan padding vertikal yang seimbang (py) memastikan konten tetap di tengah.
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 md:py-20">
       
       <div className="absolute inset-0 z-0 pointer-events-none">
         {stars.map((star) => (
@@ -151,16 +155,17 @@ export function HeroSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="text-base md:text-xl text-white max-w-2xl mx-auto mt-4 mb-8 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-medium"
+          className="text-base md:text-xl text-white max-w-2xl mx-auto mt-4 mb-4 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-medium"
         >
           We are delighted to invite you to our End-of-Year Concert 2025! Join us as
-          we celebrate our student&apos;s growth, creativity, and achievements.
+          we celebrate our students&apos; growth, creativity, and achievements.
         </motion.p>
+
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.6 }}
-          className="text-base md:text-xl text-white max-w-2xl mx-auto mt-4 mb-8 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-medium"
+          transition={{ duration: 1, delay: 0.7 }} 
+          className="text-base md:text-xl text-white max-w-2xl mx-auto mt-2 mb-8 leading-relaxed drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] font-medium italic"
         >
           Kami dengan senang hati mengundang Anda ke End-of-Year Concert 2025. Mari bergabung bersama kami untuk merayakan perkembangan, kreativitas, dan pencapaian para siswa.
         </motion.p>
