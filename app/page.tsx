@@ -51,7 +51,7 @@ function HomeContent() {
       
       <div className="fixed top-0 left-0 w-full h-[100vh] z-[-1] pointer-events-none">
         <Image
-          src="/BG2.jpeg"
+          src="/d.jpeg"
           alt="Background Starry Night"
           fill
           priority
