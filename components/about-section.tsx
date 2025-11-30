@@ -31,7 +31,7 @@ export function AboutSection() {
               <div className="space-y-4 mb-8">
                 {[
                   { icon: Calendar, title: "Date", desc: "Sunday, 7 December 2025" },
-                  { icon: Clock, title: "Time", desc: "Session 1: 13.30 - 15.00 WIB \n(Preschool, Prekindergarten, Kindergarten & Basic)\nSession 2: 15.30 - 18.00 WIB\n(Starter - Waystage)" },
+                  { icon: Clock, title: "Time", desc: "Session 1: 13.30 WIB - Until Finished (Preschool, Pre-Kindergarten, Kindergarten, Pre-Basic & Basic)\nSession 2: 15.30 WIB - Until Finished (Starter up to Waystage)" },
                   { icon: MapPin, title: "Venue", desc: "Ballroom Bintang Mulia" },
                   { icon: Users, title: "Audience", desc: "Students, Parents & Guests" }
                 ].map((item, idx) => (
@@ -43,7 +43,21 @@ export function AboutSection() {
                     <item.icon className="w-6 h-6 text-orange-primary flex-shrink-0 mt-1" />
                     <div>
                       <h3 className="font-bold text-navy-primary">{item.title}</h3>
-                      <div className="text-gray-900 font-medium whitespace-pre-line">{item.desc}</div>
+                      {item.title === "Time" ? (
+                        <ul className="text-gray-900 font-medium list-disc list-inside space-y-2">
+                          {[
+                            { title: "Session 1", desc: "13.30 WIB - Until Finished (Preschool, Pre-Kindergarten, Kindergarten, Pre-Basic & Basic)" },
+                            { title: "Session 2", desc: "15.30 WIB - Until Finished (Starter up to Waystage)" }
+                          ].map((session, i) => (
+                            <li key={i} className="leading-relaxed">
+                              <strong>{session.title}</strong><br />
+                              {session.desc}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div className="text-gray-900 font-medium whitespace-pre-line">{item.desc}</div>
+                      )}
                     </div>
                   </motion.div>
                 ))}

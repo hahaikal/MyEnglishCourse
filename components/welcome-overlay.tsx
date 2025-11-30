@@ -11,7 +11,7 @@ interface WelcomeOverlayProps {
 
 function WelcomeOverlayContent({ onOpen }: WelcomeOverlayProps) {
   const [isOpen, setIsOpen] = useState(true); 
-  const [guestName, setGuestName] = useState('Bapak/Ibu/Saudara');
+  const [guestName, setGuestName] = useState('Parents of MEC Students');
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -63,7 +63,7 @@ function WelcomeOverlayContent({ onOpen }: WelcomeOverlayProps) {
             </div>
 
             <div className="py-6 border-t border-b border-white/10">
-              <p className="text-sm text-gray-400 mb-2">Kepada Yth,</p>
+              <p className="text-sm text-gray-400 mb-2">To Our Honored Guest,</p>
               <h2 className="text-2xl font-bold text-white capitalize break-words">
                 {guestName}
               </h2>
