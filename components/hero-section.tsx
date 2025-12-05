@@ -22,7 +22,6 @@ export function HeroSection() {
   });
 
   useEffect(() => {
-    // Logic optimasi bintang yang sudah kita terapkan
     const isMobile = window.innerWidth < 768;
     const starCount = isMobile ? 20 : 60;
 
@@ -35,7 +34,7 @@ export function HeroSection() {
     }));
     setStars(generatedStars);
 
-    const targetDate = new Date('2025-12-07T14:00:00+07:00').getTime();
+    const targetDate = new Date('2025-12-07T13:30:00+07:00').getTime();
     const interval = setInterval(() => {
       const now = new Date().getTime();
       const distance = targetDate - now;
@@ -61,9 +60,6 @@ export function HeroSection() {
   };
 
   return (
-    // REVISI POSISI: 
-    // Ganti 'pt-20 pb-10' menjadi 'py-12 md:py-20'.
-    // Menggunakan padding vertikal yang seimbang (py) memastikan konten tetap di tengah.
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-12 md:py-20">
       
       <div className="absolute inset-0 z-0 pointer-events-none">
